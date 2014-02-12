@@ -4,7 +4,7 @@ var fs = require('fs')
 ,url = require('url');
 
 var ITEM_MAX = 230;
-var ITEM_COUNT_HALF = 18;
+var ITEM_COUNT_HALF = 18 * 4;
 var images = [];
 for(var i = 0 ; i <= ITEM_COUNT_HALF ; i++) {
 	var img = Math.floor(Math.random() * ITEM_MAX);
@@ -70,7 +70,7 @@ io = io.listen(server).on('connection', function (socket) {
 		socket.emit('state.init', gameModel);
 	});
 	socket.on('state.update', function (selectedItems) {
-		console.log(Math.random());
+		console.log('state.update received: ', selectedItems);
 		var imgA = findImageById(selectedItems[0]);
 		var imgB = findImageById(selectedItems[1]);
 		var stateUpdate = {'items': selectedItems, 'action': 'delete'}

@@ -51,19 +51,29 @@ function initGameGrid(gameState) {
 }
 
 function itemClick(item){
-	var i = selectedItems[0] >= 0 ? 1 : 0;
-	selectedItems[i] = $(item).attr("id");
-	$(item).fadeToggle(SPEED, "swing", function (){
-		$(item).find(".grid_item_q").toggle();
-		$(item).find(".grid_item_w").toggle();		
+	if(!$(item).attr("data-is-flipped") || $(item).attr("data-is-flipped") == "false") {
+		var i = selectedItems[0] >= 0 ? 1 : 0;
+		var id =  $(item).attr("id");
+		if(i == 1 && id == selectedItems[0])
+			return;
+		selectedItems[i] = id;
+
+		var copy = selectedItems.slice(0);
+		if(i == 1){
+			selectedItems = [ -1, -1 ];
+		}
+
+		$(item).attr("data-is-flipped", true);
 		$(item).fadeToggle(SPEED, "swing", function (){
-			if(i == 1){
-				iosocket.emit("state.update", selectedItems);
-				selectedItems = [ -1, -1 ];
-			}
-		});
-	});	
-	
+			$(this).find(".grid_item_q").toggle();
+			$(this).find(".grid_item_w").toggle();		
+			$(this).fadeToggle(SPEED, "swing", function (){
+				if(i == 1){
+					iosocket.emit("state.update", copy);
+				}
+			});
+		});	
+	}
 }
 
 function updateGameGrid(updateState){
@@ -75,12 +85,24 @@ function updateGameGrid(updateState){
 		$("#" + updateState.items[0]).fadeToggle(SPEED, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(SPEED, "swing");
+			$(this).fadeToggle(SPEED, "swing", function (){
+				$(this).attr("data-is-flipped", false);
+			});
 		});	
 		$("#" + updateState.items[1]).fadeToggle(SPEED, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(SPEED, "swing");
+			$(this).fadeToggle(SPEED, "swing", function (){
+				$(this).attr("data-is-flipped", false);
+			});
 		});	
 	}
+}
+
+function flip(item){
+
+}
+
+function unflip(itemA, itemB){
+	
 }
