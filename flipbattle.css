@@ -4,16 +4,16 @@
 
 .grid_item {
 	float: left;
-	width: 100px;
-	height: 100px;
+	width: 64px;
+	height: 64px;
 	margin: 2px;	
 	border: 2px solid transparent;
 }
 
 .grid_item_blank {
 	float: left;
-	width: 100px;
-	height: 100px;
+	width: 64px;
+	height: 64px;
 	margin: 2px;	
 	border: 2px solid transparent;
 }
@@ -23,8 +23,8 @@
 }
 
 .grid_item img {
-	width: 100px;
-	height: 100px;
+	width: 64px;
+	height: 64px;
 }
 
 .grid_clear {

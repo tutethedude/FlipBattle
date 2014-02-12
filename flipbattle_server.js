@@ -3,10 +3,20 @@ var fs = require('fs')
 ,io = require('socket.io')
 ,url = require('url');
 
-var ITEM_COUNT_HALF = 9;
-var gameModel = new Array();
-for(var i = 0 ; i < ITEM_COUNT_HALF ; i++) {
-	gameModel.push({'id': i, 'img': (i + 10)});
+var ITEM_MAX = 230;
+var ITEM_COUNT_HALF = 18;
+var images = [];
+for(var i = 0 ; i <= ITEM_COUNT_HALF ; i++) {
+	var img = Math.floor(Math.random() * ITEM_MAX);
+	if(images.indexOf(img) < 0) {
+		images.push(img);
+		images.push(img);
+	}
+}
+images = shuffle(images);
+var gameModel = [];
+for(var i = 0 ; i < images.length ; i++) {
+	gameModel.push({'id': i, 'img': images[i]});
 }
 
 var server = http.createServer(function(req, res) {
@@ -22,14 +32,7 @@ var server = http.createServer(function(req, res) {
 	else if(req.url.indexOf('.img') != -1) {
 		var pathname = url.parse(req.url).pathname;
 		var id = parseInt(pathname.substring(1, pathname.length - 4));
-		var img = 0;
-		// Find imag from id
-		for(var i = 0 ; i < gameModel.length ; i++) {
-			if(gameModel[i].id == id) {
-				img = gameModel[i].img;
-				break;
-			}
-		}
+		var img = findImageById(id);
 		fs.readFile(__dirname + '/img/flags/' + img + '.png', function (err, data) {
 			if (err) console.log(err);
 			res.writeHead(200, {'Content-Type': 'image/png'});
@@ -61,13 +64,37 @@ var server = http.createServer(function(req, res) {
 	console.log('Listening at: http://localhost:8080');
 });
 
-io.listen(server).on('connection', function (socket) {
+io = io.listen(server).on('connection', function (socket) {
 	socket.on('state.init', function (id) {
 		console.log('state.init received: ', id);
 		socket.emit('state.init', gameModel);
 	});
-	socket.on('state.update', function (id) {
-		console.log('state.update received: ', id);
-		socket.broadcast.emit('state.update', gameModel);
+	socket.on('state.update', function (selectedItems) {
+		console.log(Math.random());
+		var imgA = findImageById(selectedItems[0]);
+		var imgB = findImageById(selectedItems[1]);
+		var stateUpdate = {'items': selectedItems, 'action': 'delete'}
+		if(imgA >= 0 && imgA == imgB) {
+			// Add score to player
+			io.sockets.emit('state.update', stateUpdate);
+		}
+		else {
+			stateUpdate.action = 'revert';
+			socket.emit('state.update', stateUpdate);
+		}
 	});
 });
+
+function findImageById(id) {
+	for(var i = 0 ; i < gameModel.length ; i++) {
+		if(gameModel[i].id == id) {
+			return gameModel[i].img;
+		}
+	}
+	return -1;
+}
+
+function shuffle(o){ 
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};

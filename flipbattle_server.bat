@@ -1,0 +1,2 @@
+node flipbattle_server.js
+pause
