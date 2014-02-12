@@ -19,6 +19,8 @@ for(var i = 0 ; i < images.length ; i++) {
 	gameModel.push({'id': i, 'img': images[i]});
 }
 
+var port = process.env.PORT || 8080;
+
 var server = http.createServer(function(req, res) {
 	if(req.url.indexOf('.png') != -1) {
 		var pathname = url.parse(req.url).pathname;
@@ -60,7 +62,7 @@ var server = http.createServer(function(req, res) {
 		res.writeHead(200, { 'Content-type': 'text/html'});
 		res.end(fs.readFileSync(__dirname + '/flipbattle.html'));
 	}	
-}).listen(8080, function() {
+}).listen(port, function() {
 	console.log('Listening at: http://localhost:8080');
 });
 
