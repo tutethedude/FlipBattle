@@ -1,4 +1,5 @@
-var fs = require('fs')
+var newrelic = require('newrelic')
+,fs = require('fs')
 ,http = require('http')
 ,io = require('socket.io')
 ,url = require('url');
@@ -75,9 +76,7 @@ io = io.listen(server).on('connection', function (socket) {
 			gameModel[findItemIndexById(itemB.id)].state = "flipped";
 			if(checkGameEnded()){
 				console.log('Game ended, starting new one...');
-				for(var i = 0 ; i < gameModel.length ; i++) {
-					gameModel[i].state = 'active';
-				}
+				initGameModel();
 				io.sockets.emit('state.init', gameModel);
 			}
 			else {
@@ -92,6 +91,7 @@ io = io.listen(server).on('connection', function (socket) {
 });
 
 function initGameModel() {
+	gameModel = [];
 	var images = [];
 	for(var i = 0 ; i <= DISTINCT_ITEMS ; i++) {
 		var img = Math.floor(Math.random() * ITEM_MAX);
