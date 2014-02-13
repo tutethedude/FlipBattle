@@ -1,5 +1,5 @@
-var newrelic = require('newrelic')
-,fs = require('fs')
+require('newrelic');
+var fs = require('fs')
 ,http = require('http')
 ,io = require('socket.io')
 ,url = require('url');
