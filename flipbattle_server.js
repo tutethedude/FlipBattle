@@ -1,3 +1,5 @@
+require('newrelic');
+
 var fs = require('fs')
 ,http = require('http')
 ,io = require('socket.io')
