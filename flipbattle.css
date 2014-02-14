@@ -1,5 +1,19 @@
+body{
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Gabriela', serif;
+}
+
+#header {
+	height: 50px;
+	border: 1px dashed lightgray;
+	text-align: center;
+}
+
 #grid {
-	padding: 1px;
+	float: left;
+	width: 80%;
+	border: 1px dashed lightgray;
 }
 
 .grid_item {
@@ -35,4 +49,18 @@
 
 .grid_clear {
 	clear: both;
+}
+
+#sidebar {
+	float: right;
+	width: 19%;
+	border: 1px dashed lightgray;
+	text-align: right;
+}
+
+#footer {
+	clear: both;
+	height: 50px;
+	border: 1px dashed lightgray;
+	text-align: center;
 }

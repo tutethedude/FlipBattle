@@ -4,58 +4,74 @@ var fs = require('fs')
 ,url = require('url');
 
 var ITEM_MAX = 1082;
-var DISTINCT_ITEMS = 8;
+var DISTINCT_ITEMS = 2;
 var gameModel = [];
 var port = process.env.PORT || 8080;
+var https = process.env.PORT ? true : false;
 
 initGameModel();
 
 var server = http.createServer(function(req, res) {
-	if(req.url.indexOf('.png') != -1) {
-		var pathname = url.parse(req.url).pathname;
-		fs.readFile(__dirname + '/img' + pathname, function (err, data) {
-			if (err) console.log(err);
-			res.writeHead(200, {'Content-Type': 'image/png'});
-			res.write(data);
-			res.end();
-		});
-	}
-	else if(req.url.indexOf('.img') != -1) {
-		var pathname = url.parse(req.url).pathname;
-		var id = parseInt(pathname.substring(1, pathname.length - 4));
-		var img = findItemById(id).img;
-		fs.readFile(__dirname + '/img/tiles/' + img + '.png', function (err, data) {
-			if (err) console.log(err);
-			res.writeHead(200, {'Content-Type': 'image/png'});
-			res.write(data);
-			res.end();
-		});
-	}
-	else if(req.url.indexOf('flipbattle_client.js') != -1) {
-		fs.readFile(__dirname + '/flipbattle_client.js', function (err, data) {
-			if (err) console.log(err);
-			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			res.write(data);
-			res.end();
-		});
-	}
-	else if(req.url.indexOf('flipbattle.css') != -1) {
-		fs.readFile(__dirname + '/flipbattle.css', function (err, data) {
-			if (err) console.log(err);
-			res.writeHead(200, {'Content-Type': 'text/css'});
-			res.write(data);
-			res.end();
-		});
+	if(https && req.headers['x-forwarded-proto']!='https') {
+		//res.redirect('https://' + req.headers.host + req.url);
+		res.writeHead(301, { Location: 'https://' + req.headers.host + req.url});
+		res.end();
 	}
 	else {
-		res.writeHead(200, { 'Content-type': 'text/html'});
-		res.end(fs.readFileSync(__dirname + '/flipbattle.html'));
-	}	
+		if(req.url.indexOf('.png') != -1) {
+			var pathname = url.parse(req.url).pathname;
+			fs.readFile(__dirname + '/img' + pathname, function (err, data) {
+				if (err) console.log(err);
+				res.writeHead(200, {'Content-Type': 'image/png'});
+				res.write(data);
+				res.end();
+			});
+		}
+		else if(req.url.indexOf('.img') != -1) {
+			var pathname = url.parse(req.url).pathname;
+			var id = parseInt(pathname.substring(1, pathname.length - 4));
+			var img = findItemById(id).img;
+			fs.readFile(__dirname + '/img/tiles/' + img + '.png', function (err, data) {
+				if (err) console.log(err);
+				res.writeHead(200, {'Content-Type': 'image/png'});
+				res.write(data);
+				res.end();
+			});
+		}
+		else if(req.url.indexOf('flipbattle_client.js') != -1) {
+			fs.readFile(__dirname + '/flipbattle_client.js', function (err, data) {
+				if (err) console.log(err);
+				res.writeHead(200, {'Content-Type': 'text/javascript'});
+				res.write(data);
+				res.end();
+			});
+		}
+		else if(req.url.indexOf('flipbattle.css') != -1) {
+			fs.readFile(__dirname + '/flipbattle.css', function (err, data) {
+				if (err) console.log(err);
+				res.writeHead(200, {'Content-Type': 'text/css'});
+				res.write(data);
+				res.end();
+			});
+		}
+		else {
+			res.writeHead(200, { 'Content-type': 'text/html'});
+			res.end(fs.readFileSync(__dirname + '/flipbattle.html'));
+		}	
+	}
 }).listen(port, function() {
 	console.log('Listening at: http://localhost:8080');
 });
 
+var clients = [];
+
 io = io.listen(server).on('connection', function (socket) {
+	clients.push(socket.id);
+	io.sockets.emit('players.update', clients);
+	socket.on('disconnect', function () {
+    	clients.splice(clients.indexOf(socket.id), 1 );
+    	io.sockets.emit('players.update', clients);
+	});
 	socket.on('state.init', function (id) {
 		console.log('state.init received: ', id);
 		socket.emit('state.init', gameModel);
@@ -92,7 +108,7 @@ io = io.listen(server).on('connection', function (socket) {
 function initGameModel() {
 	gameModel = [];
 	var images = [];
-	for(var i = 0 ; i <= DISTINCT_ITEMS ; i++) {
+	for(var i = 0 ; i < DISTINCT_ITEMS ; i++) {
 		var img = Math.floor(Math.random() * ITEM_MAX);
 		if(images.indexOf(img) < 0) {
 			images.push(img);
