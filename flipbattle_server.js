@@ -3,7 +3,7 @@ var fs = require('fs')
 ,io = require('socket.io')
 ,url = require('url');
 
-var ITEM_MAX = 230;
+var ITEM_MAX = 1082;
 var DISTINCT_ITEMS = 8;
 var gameModel = [];
 var port = process.env.PORT || 8080;
@@ -24,7 +24,7 @@ var server = http.createServer(function(req, res) {
 		var pathname = url.parse(req.url).pathname;
 		var id = parseInt(pathname.substring(1, pathname.length - 4));
 		var img = findItemById(id).img;
-		fs.readFile(__dirname + '/img/flags/' + img + '.png', function (err, data) {
+		fs.readFile(__dirname + '/img/tiles/' + img + '.png', function (err, data) {
 			if (err) console.log(err);
 			res.writeHead(200, {'Content-Type': 'image/png'});
 			res.write(data);

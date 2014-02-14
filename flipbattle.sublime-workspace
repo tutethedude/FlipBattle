@@ -19,7 +19,7 @@
 			"file": "flipbattle_server.js",
 			"settings":
 			{
-				"buffer_size": 3741,
+				"buffer_size": 3688,
 				"line_ending": "Windows"
 			}
 		},
@@ -27,7 +27,7 @@
 			"file": "flipbattle.html",
 			"settings":
 			{
-				"buffer_size": 516,
+				"buffer_size": 648,
 				"line_ending": "Windows"
 			}
 		},
@@ -35,7 +35,7 @@
 			"file": "flipbattle.css",
 			"settings":
 			{
-				"buffer_size": 374,
+				"buffer_size": 532,
 				"line_ending": "Windows"
 			}
 		},
@@ -75,6 +75,9 @@
 	},
 	"file_history":
 	[
+		"/D/Desarrollo/FlipBattle/FlipBattle/newrelic.js",
+		"/D/log.txt",
+		"/D/Desarrollo/FlipBattle/FlipBattle/newrelic_agent.log",
 		"/D/Desarrollo/FlipBattle/FlipBattle/package.json",
 		"/D/Desarrollo/FlipBattle/FlipBattle/.gitignore",
 		"/D/Desarrollo/FlipBattle/FlipBattle/.git/config",
@@ -103,6 +106,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			".grid",
+			">\n",
+			">",
+			"q.png"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -120,7 +127,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -129,15 +136,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3741,
+						"buffer_size": 3688,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2479,
-								2479
+								773,
+								773
 							]
 						],
 						"settings":
@@ -146,10 +153,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 945.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -158,15 +165,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 516,
+						"buffer_size": 648,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								516,
-								516
+								532,
+								536
 							]
 						],
 						"settings":
@@ -177,7 +184,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -186,15 +193,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 374,
+						"buffer_size": 532,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								96,
-								96
+								5,
+								5
 							]
 						],
 						"settings":
@@ -222,8 +229,8 @@
 						"selection":
 						[
 							[
-								1303,
-								1303
+								1536,
+								1536
 							]
 						],
 						"settings":
@@ -232,10 +239,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 180.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]

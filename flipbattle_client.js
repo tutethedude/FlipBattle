@@ -32,23 +32,23 @@ function initConnections() {
 }
 
 function initGameGrid(gameState) {
-	$(".grid").empty();
+	$("#grid").empty();
 	
 	for(var i = 0 ; i < gameState.length ; i++) {
 		if(gameState[i].state == 'active') {
 			var id = gameState[i].id;
 			var html = "<div id='" + id + "' class='grid_item'>";
-			html += "<img class='grid_item_q' src='q.png'/>";
+			html += "<img class='grid_item_q' src='u.png'/>";
 			html += "<img class='grid_item_w' src='" + id + ".img' style='display: none;'/>";
 			html += "</div>";
-			$(".grid").append(html);
+			$("#grid").append(html);
 		}
 		else if(gameState[i].state == 'flipped') {
-			$(".grid").append("<div class='grid_item_blank'></div>");
+			$("#grid").append("<div class='grid_item_blank'></div>");
 		}
 	}
 	
-	$(".grid").append("<div class='grid_clear'></div>");
+	$("#grid").append("<div class='grid_clear'></div>");
 	
 	$(".grid_item").click(function (){
 		itemClick(this);
