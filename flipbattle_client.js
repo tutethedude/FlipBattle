@@ -1,4 +1,4 @@
-var SPEED = 200;
+var DURATION = 200;
 var DELAY = 500;
 var CELLS = 18;
 
@@ -19,12 +19,13 @@ function initConnections() {
 			$("#incomingChatMessages").append("<li>Disconnected</li>");
 		});
 		iosocket.on('state.init', function(gameState) {
-			//$("#" + id).fadeToggle(SPEED, "swing").replaceWith("<div class='grid_item_blank'></div>");
 			initGameGrid(gameState);
 		});
 		iosocket.on('state.update', function(updateState) {
-			//$("#" + id).fadeToggle(SPEED, "swing").replaceWith("<div class='grid_item_blank'></div>");
 			updateGameGrid(updateState);
+		});
+		iosocket.on('players.update', function(clients) {
+			updatePlayers(clients);
 		});
 		console.log("Requesting gameState");
 		iosocket.emit("state.init", "clientUniqueId");
@@ -69,10 +70,10 @@ function itemClick(item){
 		}
 
 		$(item).attr("data-is-flipped", true);
-		$(item).fadeToggle(SPEED, "swing", function (){
+		$(item).fadeToggle(DURATION, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(SPEED, "swing", function (){
+			$(this).fadeToggle(DURATION, "swing", function (){
 				if(i == 1){
 					iosocket.emit("state.update", copy);
 				}
@@ -83,31 +84,37 @@ function itemClick(item){
 
 function updateGameGrid(updateState){
 	if(updateState.action == "delete") {
-		$("#" + updateState.items[0]).fadeToggle(SPEED, "swing").replaceWith("<div class='grid_item_blank'></div>");
-		$("#" + updateState.items[1]).fadeToggle(SPEED, "swing").replaceWith("<div class='grid_item_blank'></div>");
+		$("#" + updateState.items[0]).toggle("puff", null, DURATION, function (){
+			$(this).replaceWith("<div class='grid_item_blank'></div>");	
+		});	
+		$("#" + updateState.items[1]).toggle("puff", null, DURATION, function (){
+			$(this).replaceWith("<div class='grid_item_blank'></div>");	
+		});
+		//$("#" + updateState.items[0]).fadeToggle(DURATION, "swing").replaceWith("<div class='grid_item_blank'></div>");
+		//$("#" + updateState.items[1]).fadeToggle(DURATION, "swing").replaceWith("<div class='grid_item_blank'></div>");
 	}
 	else if(updateState.action == "revert") {
-		$("#" + updateState.items[0]).fadeToggle(SPEED, "swing", function (){
+		$("#" + updateState.items[0]).fadeToggle(DURATION, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(SPEED, "swing", function (){
+			$(this).fadeToggle(DURATION, "swing", function (){
 				$(this).attr("data-is-flipped", false);
 			});
 		});	
-		$("#" + updateState.items[1]).fadeToggle(SPEED, "swing", function (){
+		$("#" + updateState.items[1]).fadeToggle(DURATION, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(SPEED, "swing", function (){
+			$(this).fadeToggle(DURATION, "swing", function (){
 				$(this).attr("data-is-flipped", false);
 			});
 		});	
 	}
 }
 
-function flip(item){
-
-}
-
-function unflip(itemA, itemB){
+function updatePlayers(clients) {
+	$("#clients").empty();
 	
+	for(var i = 0 ; i < clients.length ; i++) {
+		$("#clients").append("<li>" + clients[i] + "</li>");
+	}
 }

@@ -4,7 +4,7 @@ var fs = require('fs')
 ,url = require('url');
 
 var ITEM_MAX = 1082;
-var DISTINCT_ITEMS = 8;
+var DISTINCT_ITEMS = 2;
 var gameModel = [];
 var port = process.env.PORT || 8080;
 
@@ -55,7 +55,15 @@ var server = http.createServer(function(req, res) {
 	console.log('Listening at: http://localhost:8080');
 });
 
+var clients = [];
+
 io = io.listen(server).on('connection', function (socket) {
+	clients.push(socket.id);
+	io.sockets.emit('players.update', clients);
+	socket.on('disconnect', function () {
+    	clients.splice(clients.indexOf(socket.id), 1 );
+    	io.sockets.emit('players.update', clients);
+	});
 	socket.on('state.init', function (id) {
 		console.log('state.init received: ', id);
 		socket.emit('state.init', gameModel);
@@ -92,7 +100,7 @@ io = io.listen(server).on('connection', function (socket) {
 function initGameModel() {
 	gameModel = [];
 	var images = [];
-	for(var i = 0 ; i <= DISTINCT_ITEMS ; i++) {
+	for(var i = 0 ; i < DISTINCT_ITEMS ; i++) {
 		var img = Math.floor(Math.random() * ITEM_MAX);
 		if(images.indexOf(img) < 0) {
 			images.push(img);

@@ -4,12 +4,12 @@
 		"selected_items":
 		[
 			[
-				"init",
-				"initGameModel"
+				"te",
+				"text-align"
 			],
 			[
-				"fin",
-				"findItemIndexById"
+				"se",
+				"selectedItems"
 			]
 		]
 	},
@@ -19,7 +19,7 @@
 			"file": "flipbattle_server.js",
 			"settings":
 			{
-				"buffer_size": 3688,
+				"buffer_size": 3923,
 				"line_ending": "Windows"
 			}
 		},
@@ -27,7 +27,7 @@
 			"file": "flipbattle.html",
 			"settings":
 			{
-				"buffer_size": 648,
+				"buffer_size": 882,
 				"line_ending": "Windows"
 			}
 		},
@@ -35,7 +35,7 @@
 			"file": "flipbattle.css",
 			"settings":
 			{
-				"buffer_size": 532,
+				"buffer_size": 913,
 				"line_ending": "Windows"
 			}
 		},
@@ -43,7 +43,7 @@
 			"file": "flipbattle_client.js",
 			"settings":
 			{
-				"buffer_size": 3141,
+				"buffer_size": 3463,
 				"line_ending": "Windows"
 			}
 		}
@@ -51,11 +51,11 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 0.0,
 		"selected_items":
 		[
 		],
-		"width": 392.0
+		"width": 0.0
 	},
 	"console":
 	{
@@ -75,19 +75,8 @@
 	},
 	"file_history":
 	[
-		"/D/Desarrollo/FlipBattle/FlipBattle/newrelic.js",
-		"/D/log.txt",
-		"/D/Desarrollo/FlipBattle/FlipBattle/newrelic_agent.log",
-		"/D/Desarrollo/FlipBattle/FlipBattle/package.json",
-		"/D/Desarrollo/FlipBattle/FlipBattle/.gitignore",
-		"/D/Desarrollo/FlipBattle/FlipBattle/.git/config",
-		"/C/Users/Matias/.ssh/github_rsa.pub",
-		"/C/Users/Matias/.ssh/known_hosts",
-		"/D/Desarrollo/FlipBattle/FlipBattle/flipbattle.html",
-		"/D/Desarrollo/FlipBattle/FlipBattle/flipbattle_server.js",
-		"/D/Desarrollo/FlipBattle/FlipBattle/Procfile",
-		"/D/Desarrollo/FlipBattle/FlipBattle/flipbattle_test.html",
-		"/D/Desarrollo/FlipBattle/FlipBattle/flipbattle_text.bat",
+		"/C/Users/mnunez/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/D/Desarrollo/FlipBattle/flipbattle_server.bat",
 		"/D/Desarrollo/FlipBattle/FlipBattle/flipbattle.sublime-project"
 	],
 	"find":
@@ -106,10 +95,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			".grid",
-			">\n",
-			">",
-			"q.png"
+			"SPEED",
+			";\n",
+			");\n",
+			"io"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -127,7 +116,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -136,15 +125,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3688,
+						"buffer_size": 3923,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								773,
-								773
+								1815,
+								1815
 							]
 						],
 						"settings":
@@ -153,10 +142,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 810.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -165,15 +154,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 648,
+						"buffer_size": 882,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								532,
-								536
+								616,
+								616
 							]
 						],
 						"settings":
@@ -184,7 +173,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -193,15 +182,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 532,
+						"buffer_size": 913,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5,
-								5
+								147,
+								147
 							]
 						],
 						"settings":
@@ -222,15 +211,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3141,
+						"buffer_size": 3463,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1536,
-								1536
+								3332,
+								3332
 							]
 						],
 						"settings":
@@ -239,10 +228,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 90.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
