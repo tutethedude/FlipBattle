@@ -10,8 +10,8 @@ var port = process.env.PORT || 8080;
 var https = process.env.PORT ? true : false;
 
 var game = {
-	tiles : [],
-	players : []
+	'tiles' : [],
+	'players' : []
 };
 
 var history = {
