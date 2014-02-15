@@ -1,24 +1,41 @@
 var fs = require('fs')
 ,http = require('http')
 ,io = require('socket.io')
-,url = require('url');
+,url = require('url')
+,hat = require('hat');
 
-var ITEM_MAX = 1082;
-var DISTINCT_ITEMS = 2;
-var gameModel = [];
+var AVAILABLE_TILES = 1082;
+var DISTINCT_TILES = 2;
 var port = process.env.PORT || 8080;
 var https = process.env.PORT ? true : false;
+
+var game = {
+	tiles : [],
+	players : []
+};
+
+var history = {
+
+};
 
 initGameModel();
 
 var server = http.createServer(function(req, res) {
 	if(https && req.headers['x-forwarded-proto']!='https') {
-		//res.redirect('https://' + req.headers.host + req.url);
 		res.writeHead(301, { Location: 'https://' + req.headers.host + req.url});
 		res.end();
 	}
 	else {
-		if(req.url.indexOf('.png') != -1) {
+		if(req.url.indexOf('favicon.png') != -1) {
+			var pathname = url.parse(req.url).pathname;
+			fs.readFile(__dirname + '/favicon.png', function (err, data) {
+				if (err) console.log(err);
+				res.writeHead(200, {'Content-Type': 'image/png'});
+				res.write(data);
+				res.end();
+			});
+		}
+		else if(req.url.indexOf('.png') != -1) {
 			var pathname = url.parse(req.url).pathname;
 			fs.readFile(__dirname + '/img' + pathname, function (err, data) {
 				if (err) console.log(err);
@@ -29,8 +46,8 @@ var server = http.createServer(function(req, res) {
 		}
 		else if(req.url.indexOf('.img') != -1) {
 			var pathname = url.parse(req.url).pathname;
-			var id = parseInt(pathname.substring(1, pathname.length - 4));
-			var img = findItemById(id).img;
+			var id = pathname.substring(1, pathname.length - 4);
+			var img = findItemById(id).image;
 			fs.readFile(__dirname + '/img/tiles/' + img + '.png', function (err, data) {
 				if (err) console.log(err);
 				res.writeHead(200, {'Content-Type': 'image/png'});
@@ -60,7 +77,7 @@ var server = http.createServer(function(req, res) {
 		}	
 	}
 }).listen(port, function() {
-	console.log('Listening at: http://localhost:8080');
+	console.log('Listening at port ' + port);
 });
 
 var clients = [];
@@ -74,25 +91,23 @@ io = io.listen(server).on('connection', function (socket) {
 	});
 	socket.on('state.init', function (id) {
 		console.log('state.init received: ', id);
-		socket.emit('state.init', gameModel);
+		socket.emit('state.init', game);
 	});
 	socket.on('state.update', function (selectedItems) {
 		console.log('state.update received: ', selectedItems);
 		var itemA = findItemById(selectedItems[0]);
-		console.log(itemA);
 		var itemB = findItemById(selectedItems[1]);
-		console.log(itemB);
 		var stateUpdate = {'items': selectedItems, 'action': 'delete'}
-		if(itemA != null && itemB != null && itemA.img == itemB.img) {
+		if(itemA != null && itemB != null && itemA.image == itemB.image) {
 			// Add score to player
 			
 			// Update model
-			gameModel[findItemIndexById(itemA.id)].state = "flipped";
-			gameModel[findItemIndexById(itemB.id)].state = "flipped";
+			game.tiles[findItemIndexById(itemA.id)].state = "flipped";
+			game.tiles[findItemIndexById(itemB.id)].state = "flipped";
 			if(checkGameEnded()){
 				console.log('Game ended, starting new one...');
 				initGameModel();
-				io.sockets.emit('state.init', gameModel);
+				io.sockets.emit('state.init', game);
 			}
 			else {
 				io.sockets.emit('state.update', stateUpdate);
@@ -106,10 +121,10 @@ io = io.listen(server).on('connection', function (socket) {
 });
 
 function initGameModel() {
-	gameModel = [];
+	game.tiles = [];
 	var images = [];
-	for(var i = 0 ; i < DISTINCT_ITEMS ; i++) {
-		var img = Math.floor(Math.random() * ITEM_MAX);
+	for(var i = 0 ; i < DISTINCT_TILES ; i++) {
+		var img = Math.floor(Math.random() * AVAILABLE_TILES);
 		if(images.indexOf(img) < 0) {
 			images.push(img);
 			images.push(img);
@@ -117,17 +132,18 @@ function initGameModel() {
 	}
 	images = shuffle(images);
 	for(var i = 0 ; i < images.length ; i++) {
-		gameModel.push({
-			'id': i, 
-			'img': images[i],
+		var imageId = hat();
+		game.tiles.push({
+			'id': imageId, 
+			'image': images[i],
 			'state': 'active'
 		});
 	}
 }
 
 function checkGameEnded() {
-	for(var i = 0 ; i < gameModel.length ; i++) {
-		if(gameModel[i].state == 'active') {
+	for(var i = 0 ; i < game.tiles.length ; i++) {
+		if(game.tiles[i].state == 'active') {
 			return false;
 		}
 	}
@@ -137,13 +153,13 @@ function checkGameEnded() {
 function findItemById(id) {
 	var index = findItemIndexById(id);
 	if(index >= 0)
-		return gameModel[index];
+		return game.tiles[index];
 	return null;
 }
 
 function findItemIndexById(id) {
-	for(var i = 0 ; i < gameModel.length ; i++) {
-		if(gameModel[i].id == id) {
+	for(var i = 0 ; i < game.tiles.length ; i++) {
+		if(game.tiles[i].id == id) {
 			return i;
 		}
 	}

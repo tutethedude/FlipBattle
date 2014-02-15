@@ -4,9 +4,11 @@
   "description": "FlipBattle\r ==========",
   "main": "flipbattle_server.js",
   "dependencies": {
-    "socket.io": "~0.9.16"
+    "socket.io": "~0.9.16",
+    "hat": "0.0.3"
   },
   "devDependencies": {},
+  "engine": "node >= 0.10.25"
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
