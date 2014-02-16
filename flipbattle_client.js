@@ -93,6 +93,9 @@ function initGameGrid(game) {
 	}
 	
 	$("#main").append("<div class='grid_clear'></div>");
+
+	$("#info").empty();	
+	$("#info").append("<p>Wave " + game.wave + "</p>");
 	
 	$(".grid_item").click(function (){
 		itemClick(this);
@@ -147,14 +150,36 @@ function updateGameGrid(tiles){
 }
 
 function updatePlayers(players) {
-	$("#rightSidebar").empty();	
-	$("#rightSidebar").append("<p>" + players.length + " players</p>");
+	players.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score) } );
+	$("#players").empty();
 	for(var i = 0 ; i < players.length ; i++) {
-		$("#rightSidebar").append('<div class="avatar"><img src="' + players[i].avatar + '.avatar" /><div class="player">' + players[i].name + '</div><div class="score">' + players[i].score +' points</div></div>');
+		$("#players").append('<div class="avatar"><img src="' + players[i].avatar + '.avatar" /><div><div class="player">' + players[i].name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
 	}
+}
+
+/**
+* Util functions
+**/
+function shuffle(o){ 
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
+function indexByKey(array, key, value) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i][key] == value) {
+            return i;
+        }
+    }
+    return null;
+}
+
+function indexById(array, value) {
+    return indexByKey(array, "id", value);
 }
 
 function randomName(){
 	var names = ["Sung","Kiley","Sherryl","Michel","Tyrell","Madie","Annika","Katharine","Jess","Thi","Kelvin","Kristina","Danae","Marjory","Elijah","Wilber","Mary","Yen","Stan","Sima","Wendell","Porfirio","Efrain","Carly","Kazuko","King","Homer","Enid","Kum","Royal","Mika","Collette","Louis","Raye","Rhoda","Sal","Marquis","Hershel","Alisa","Wade"];
 	return names[Math.floor(Math.random() * names.length)];
 }
+
