@@ -1,49 +1,65 @@
+/**
+* Parameters
+**/
 var DURATION = 200;
 var DELAY = 500;
 var CELLS = 18;
 
+/**
+* Socket events
+**/
+var EVENT_CONNECT = "connect";
+var EVENT_DISCONNECT = "disconnect";
+var EVENT_PLAYERS_UPDATE = "players.update";
+var EVENT_STATE_INIT = "state.init";
+var EVENT_STATE_UPDATE = "state.update";
+
+/**
+* Tile states
+**/
+var TILE_FLIPPED = "flipped";
+var TILE_READY = "ready";
+
 var iosocket;
-var selectedItems = [ null, null ];
+var selectedTiles = [];
+var parameters;
 
 $(function() {
 	initConnections();
 });
 
 function initConnections() {
-	console.log("Connecting to server");
 	iosocket = io.connect();
-
-	iosocket.on("connect", function () {
-		console.log("Connected to server!");
-		iosocket.on("disconnect", function() {
+	iosocket.on(EVENT_CONNECT, function () {
+		iosocket.on(EVENT_DISCONNECT, function() {
 			$("#incomingChatMessages").append("<li>Disconnected</li>");
 		});
-		iosocket.on('state.init', function(game) {
+		iosocket.on(EVENT_STATE_INIT, function(game) {
 			initGameGrid(game);
 		});
-		iosocket.on('state.update', function(updateState) {
+		iosocket.on(EVENT_STATE_UPDATE, function(updateState) {
 			updateGameGrid(updateState);
 		});
-		iosocket.on('players.update', function(clients) {
+		iosocket.on(EVENT_PLAYERS_UPDATE, function(clients) {
 			updatePlayers(clients);
 		});
-		iosocket.emit("state.init", "clientName");
+		iosocket.emit(EVENT_STATE_INIT, "Anonymus");
 	});
 }
 
 function initGameGrid(game) {
-	$("#grid").empty();
-	
+	parameters = game.parameters;
+	$("#grid").empty();	
 	for(var i = 0 ; i < game.tiles.length ; i++) {
-		if(game.tiles[i].state == 'active') {
+		if(game.tiles[i].state == TILE_READY) {
 			var id = game.tiles[i].id;
 			var html = "<div id='" + id + "' class='grid_item'>";
 			html += "<img class='grid_item_q' src='u.png'/>";
-			html += "<img class='grid_item_w' src='" + id + ".img' style='display: none;'/>";
+			html += "<img class='grid_item_w' src='" + id + game.parameters.suffixTile + "' style='display: none;'/>";
 			html += "</div>";
 			$("#grid").append(html);
 		}
-		else if(game.tiles[i].state == 'flipped') {
+		else if(game.tiles[i].state == TILE_FLIPPED) {
 			$("#grid").append("<div class='grid_item_blank'></div>");
 		}
 	}
@@ -56,64 +72,55 @@ function initGameGrid(game) {
 }
 
 function itemClick(item){
-	if(!$(item).attr("data-is-flipped") || $(item).attr("data-is-flipped") == "false") {
-		var i = selectedItems[0] != null ? 1 : 0;
-		var id =  $(item).attr("id");
-		if(i == 1 && id == selectedItems[0])
-			return;
-		selectedItems[i] = id;
+	if(!$(item).attr("data-flipped") || $(item).attr("data-flipped") == "false") {
 
-		var copy = selectedItems.slice(0);
-		if(i == 1){
-			selectedItems = [ null, null ];
+		var last = selectedTiles.length == parameters.matchTiles - 1;
+		var id = $(item).attr("id");
+		if(selectedTiles.indexOf(id) >= 0)
+			return;
+
+		selectedTiles.push(id);
+
+		var selectedTilesCopy = selectedTiles.slice(0);
+		if(last){
+			selectedTiles = [];
 		}
 
-		$(item).attr("data-is-flipped", true);
+		$(item).attr("data-flipped", true);
 		$(item).fadeToggle(DURATION, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
 			$(this).fadeToggle(DURATION, "swing", function (){
-				if(i == 1){
-					iosocket.emit("state.update", copy);
+				if(last){
+					iosocket.emit(EVENT_STATE_UPDATE, selectedTilesCopy);
 				}
 			});
 		});	
 	}
 }
 
-function updateGameGrid(updateState){
-	if(updateState.action == "delete") {
-		$("#" + updateState.items[0]).toggle("puff", null, DURATION, function (){
-			$(this).replaceWith("<div class='grid_item_blank'></div>");	
-		});	
-		$("#" + updateState.items[1]).toggle("puff", null, DURATION, function (){
-			$(this).replaceWith("<div class='grid_item_blank'></div>");	
-		});
-		//$("#" + updateState.items[0]).fadeToggle(DURATION, "swing").replaceWith("<div class='grid_item_blank'></div>");
-		//$("#" + updateState.items[1]).fadeToggle(DURATION, "swing").replaceWith("<div class='grid_item_blank'></div>");
-	}
-	else if(updateState.action == "revert") {
-		$("#" + updateState.items[0]).fadeToggle(DURATION, "swing", function (){
-			$(this).find(".grid_item_q").toggle();
-			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(DURATION, "swing", function (){
-				$(this).attr("data-is-flipped", false);
+function updateGameGrid(tiles){
+	for(var i = 0; i < tiles.length; i++) {
+		if(tiles[i].state == TILE_FLIPPED) {
+			$("#" + tiles[i].id).toggle("puff", null, DURATION, function (){
+				$(this).replaceWith("<div class='grid_item_blank'></div>");	
+			});	
+		}
+		else if(tiles[i].state == TILE_READY) {
+			$("#" + tiles[i].id).fadeToggle(DURATION, "swing", function (){
+				$(this).find(".grid_item_q").toggle();
+				$(this).find(".grid_item_w").toggle();		
+				$(this).fadeToggle(DURATION, "swing", function (){
+					$(this).attr("data-flipped", false);
+				});
 			});
-		});	
-		$("#" + updateState.items[1]).fadeToggle(DURATION, "swing", function (){
-			$(this).find(".grid_item_q").toggle();
-			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(DURATION, "swing", function (){
-				$(this).attr("data-is-flipped", false);
-			});
-		});	
+		}
 	}
 }
 
-function updatePlayers(clients) {
-	$("#clients").empty();
-	
-	for(var i = 0 ; i < clients.length ; i++) {
-		$("#clients").append("<li>" + clients[i] + "</li>");
+function updatePlayers(players) {
+	$("#players").empty();	
+	for(var i = 0 ; i < players.length ; i++) {
+		$("#players").append("<li>" + players[i].name + "</li>");
 	}
 }
