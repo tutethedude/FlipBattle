@@ -124,6 +124,14 @@ body{
 	border: 2px solid transparent;
 }
 
+.sample_item img {
+	width: 128px;
+	height: 128px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
 #avatarSelect {
 	margin-left: 8px;
 }

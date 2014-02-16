@@ -103,7 +103,7 @@ function eventDisconnect(socket) {
 function eventStateInit(socket, player) {
 	game.players[indexById(game.players, socket.id)].name = player.name;
 	game.players[indexById(game.players, socket.id)].avatar = player.avatar;
-	socket.emit(EVENT_STATE_INIT, gamePublicData());
+	socket.emit(EVENT_STATE_INIT, gamePublicData(socket.id));
 	io.sockets.emit(EVENT_PLAYERS_UPDATE, game.players);
 }
 
@@ -128,7 +128,7 @@ function eventStateUpdate(socket, selectedTiles) {
 		game.players[indexById(game.players, socket.id)].score += 1;
 		if(checkGameEnded()){
 			initGame();
-			io.sockets.emit(EVENT_STATE_INIT, gamePublicData());
+			io.sockets.emit(EVENT_STATE_INIT, gamePublicData(socket.id));
 		}
 		else {
 			var updateData = {
@@ -191,12 +191,13 @@ function checkGameEnded() {
 	return true;
 }
 
-function gamePublicData() {
+function gamePublicData(playerId) {
 	return {
 		tiles : game.tiles,
 		parameters : game.parameters,
 		players : game.players,
-		wave : game.wave
+		wave : game.wave,
+		playerId : playerId
 	};
 }
 

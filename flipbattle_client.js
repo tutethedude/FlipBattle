@@ -28,9 +28,51 @@ var iosocket;
 var selectedTiles = [];
 var parameters;
 var nickname;
+var playerId;
 
+/**
+* Document load
+**/
 $(function() {
-	//initConnection();
+	tutorial();
+	register();
+});
+
+/**
+* Animate tutorial widgets
+**/
+function tutorial() {
+	// Sample flip
+	window.setTimeout(function(){
+		$("#sampleA").fadeToggle(DURATION, "swing", function (){
+			$(this).find(".grid_item_q").toggle();
+			$(this).find(".grid_item_w").toggle();		
+			$(this).fadeToggle(DURATION, "swing", function (){
+				window.setTimeout(function(){
+					$("#sampleB").fadeToggle(DURATION, "swing", function (){
+						$(this).find(".grid_item_q").toggle();
+						$(this).find(".grid_item_w").toggle();		
+						$(this).fadeToggle(DURATION, "swing", function (){
+							$("#sampleA,#sampleB").toggle("puff", null, DURATION, function (){
+								$(this).replaceWith("<div class='grid_item_blank'></div>");	
+							});	
+						});
+					});		
+				}, DELAY);
+			});
+		});		
+	}, DELAY);
+
+	// Sample score
+	window.setTimeout(function(){
+		var item = $("#targetScore").detach();
+		item.insertBefore("#maxScore");
+		item.effect("highlight", {color: "darkgray"}, 500);
+		$("#targetScore > div > div.score").html("50 pts");
+	}, DELAY * 5);
+}
+
+function register() {
 	$("#txtNickname").val(randomName());
 	$("#btnPlay").click(function(){
 		nickname = $("#txtNickname").val().trim();
@@ -47,7 +89,7 @@ $(function() {
 		$("#avatarSelect img.selected").toggleClass("selected");
 		$(this).toggleClass("selected");
 	});
-});
+}
 
 function initConnection() {
 	iosocket = io.connect();
@@ -56,6 +98,7 @@ function initConnection() {
 			$("#incomingChatMessages").append("<li>Disconnected</li>");
 		});
 		iosocket.on(EVENT_STATE_INIT, function(gameData) {
+			playerId = gameData.playerId;
 			initGameGrid(gameData);
 			updatePlayers(gameData.players);
 		});
@@ -153,7 +196,8 @@ function updatePlayers(players) {
 	players.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score) } );
 	$("#players").empty();
 	for(var i = 0 ; i < players.length ; i++) {
-		$("#players").append('<div class="avatar"><img src="' + players[i].avatar + '.avatar" /><div><div class="player">' + players[i].name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
+		var name = players[i].id == playerId ? players[i].name + " (you)" : players[i].name;
+		$("#players").append('<div class="avatar"><img src="' + players[i].avatar + '.avatar" /><div><div class="player">' + name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
 	}
 }
 
