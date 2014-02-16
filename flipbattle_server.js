@@ -11,8 +11,8 @@ var hat = require("hat");
 * Parameters
 **/
 var AVAILABLE_TILES = 1082;
-var DISTINCT_TILES = 2;
-var MATCH_TILES = 3;
+var DISTINCT_TILES = 14;
+var MATCH_TILES = 2;
 var SUFFIX_TILE = ".tile";
 var PORT = process.env.PORT || 8080;
 var USE_SSL = process.env.PORT ? true : false;
@@ -87,11 +87,11 @@ io = io.listen(server).on(EVENT_CONNECTION, function (socket) {
 function eventConnection(socket) {
 	var player = {
 		id : socket.id,
-		name : "Anonymus",
-		score : 0
+		name : "Anonymous",
+		score : 0,
+		avatar : 0
 	};
 	game.players.push(player);
-	io.sockets.emit(EVENT_PLAYERS_UPDATE, game.players);
 }
 
 function eventDisconnect(socket) {
@@ -99,13 +99,16 @@ function eventDisconnect(socket) {
     io.sockets.emit(EVENT_PLAYERS_UPDATE, game.players);
 }
 
-function eventStateInit(socket, playerName) {
-	game.players[indexById(game.players, socket.id)].name = playerName;
+function eventStateInit(socket, player) {
+	game.players[indexById(game.players, socket.id)].name = player.name;
+	game.players[indexById(game.players, socket.id)].avatar = player.avatar;
 	var gameData = {
 		tiles : game.tiles,
-		parameters : game.parameters
+		parameters : game.parameters,
+		players : game.players
 	};
 	socket.emit(EVENT_STATE_INIT, gameData);
+	io.sockets.emit(EVENT_PLAYERS_UPDATE, game.players);
 }
 
 function eventStateUpdate(socket, selectedTiles) {
@@ -126,20 +129,30 @@ function eventStateUpdate(socket, selectedTiles) {
 			game.tiles[indexById(game.tiles, tiles[i].id)].state = TILE_FLIPPED;
 			tiles[i].state = TILE_FLIPPED;
 		}
+		game.players[indexById(game.players, socket.id)].score += 1;
 		if(checkGameEnded()){
 			initGame();
 			var gameData = {
 				tiles : game.tiles,
-				parameters : game.parameters
+				parameters : game.parameters,
+				players : game.players
 			};
 			io.sockets.emit(EVENT_STATE_INIT, gameData);
 		}
 		else {
-			io.sockets.emit(EVENT_STATE_UPDATE, tiles);
+			var updateData = {
+				tiles : tiles,
+				players : game.players
+			};
+			io.sockets.emit(EVENT_STATE_UPDATE, updateData);
 		}
 	}
 	else {
-		socket.emit(EVENT_STATE_UPDATE, tiles);
+		var updateData = {
+			tiles : tiles,
+			players : game.players
+		};
+		socket.emit(EVENT_STATE_UPDATE, updateData);
 	}
 }
 
@@ -168,6 +181,9 @@ function initGame() {
 			id: imageId, 
 			image: images[i]
 		});
+	}
+	for(var i = 0 ; i < game.players ; i++) {
+		//game.players[i].score = 0;
 	}
 }
 
@@ -232,6 +248,13 @@ function processRoute(req, res) {
 			var image = game.images[indexById(game.images, id)].image;
 			res.writeHead(200, {"Content-Type": "image/png"});
 			res.end(fs.readFileSync(__dirname + "/img/tiles/" + image + ".png"));
+		}
+		// Route to avatars using id
+		else if(req.url.indexOf(".avatar") != -1) {
+			var pathname = url.parse(req.url).pathname;
+			var id = pathname.substring(1, pathname.length - 7);
+			res.writeHead(200, {"Content-Type": "image/jpg"});
+			res.end(fs.readFileSync(__dirname + "/img/avatars/" + id + ".jpg"));
 		}
 		// Route to client javascript
 		else if(req.url.indexOf("flipbattle_client.js") != -1) {
