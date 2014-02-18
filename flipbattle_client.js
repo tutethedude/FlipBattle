@@ -4,7 +4,8 @@
 var DURATION = 200;
 var DELAY = 500;
 var CELLS = 18;
-var AVATARS = 12
+var AVAILABLE_AVATARS = 1082;
+var AVATARS = 14;
 
 /**
 * Socket events
@@ -29,6 +30,7 @@ var selectedTiles = [];
 var parameters;
 var nickname;
 var playerId;
+var tutorialTimer;
 
 /**
 * Document load
@@ -42,36 +44,52 @@ $(function() {
 * Animate tutorial widgets
 **/
 function tutorial() {
-	// Sample flip
-	window.setTimeout(function(){
+	console.log("animating tutorial");
+	var originalGrid = $("#sample_grid").clone();
+	var originalScore = $("#sample_score").clone();
+	// Sample flip A
+	tutorialTimer = window.setTimeout(function(){
 		$("#sampleA").fadeToggle(DURATION, "swing", function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
 			$(this).fadeToggle(DURATION, "swing", function (){
-				window.setTimeout(function(){
+				// Sample flip B
+				tutorialTimer = window.setTimeout(function(){
 					$("#sampleB").fadeToggle(DURATION, "swing", function (){
 						$(this).find(".grid_item_q").toggle();
 						$(this).find(".grid_item_w").toggle();		
 						$(this).fadeToggle(DURATION, "swing", function (){
-							$("#sampleA,#sampleB").toggle("puff", null, DURATION, function (){
-								$(this).replaceWith("<div class='grid_item_blank'></div>");	
+							/*
+							$("#sampleA").find(".grid_item_w").toggle("puff", null, DURATION, function (){
+								$(this).parent().replaceWith("<div class='grid_item_blank'></div>");									
+							});	*/
+							$("#sampleB").toggle("puff", null, DURATION, function (){
+								$(this).replaceWith("<div class='grid_item_blank'></div>");									
 							});	
+
+							// Sample score
+							var item = $("#targetScore").detach();
+							item.insertBefore("#maxScore");
+							item.effect("highlight", {color: "darkgray"}, 500);
+							$("#targetScore > div > div.score").html("50 pts");
+							// Reset to normal							
+							tutorialTimer = window.setTimeout(function(){
+								$("#sample_grid").replaceWith(originalGrid);
+								$("#sample_score").replaceWith(originalScore);
+								tutorial();
+							}, DELAY * 3);
+							
 						});
 					});		
 				}, DELAY);
 			});
 		});		
-	}, DELAY);
-
-	// Sample score
-	window.setTimeout(function(){
-		var item = $("#targetScore").detach();
-		item.insertBefore("#maxScore");
-		item.effect("highlight", {color: "darkgray"}, 500);
-		$("#targetScore > div > div.score").html("50 pts");
-	}, DELAY * 5);
+	}, DELAY * 2);
 }
 
+/**
+* Register player and start gamee
+**/
 function register() {
 	$("#txtNickname").val(randomName());
 	$("#btnPlay").click(function(){
@@ -81,7 +99,8 @@ function register() {
 		initConnection();
 	});
 	for(var i = 0; i <= AVATARS; i++ ){
-		$("#avatarSelect").append('<img src="' + i + '.avatar" />');
+		var avatar =  Math.floor(Math.random() * AVAILABLE_AVATARS);
+		$("#avatarSelect").append('<img src="' + avatar + '.avatar" />');
 	}
 	$("#avatarSelect").append('<div class="grid_clear">&nbsp;</div>');
 	$("#avatarSelect img").first().toggleClass("selected");

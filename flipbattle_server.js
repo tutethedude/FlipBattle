@@ -255,8 +255,8 @@ function processRoute(req, res) {
 		else if(req.url.indexOf(".avatar") != -1) {
 			var pathname = url.parse(req.url).pathname;
 			var id = pathname.substring(1, pathname.length - 7);
-			res.writeHead(200, {"Content-Type": "image/jpg"});
-			res.end(fs.readFileSync(__dirname + "/img/avatars/" + id + ".jpg"));
+			res.writeHead(200, {"Content-Type": "image/png"});
+			res.end(fs.readFileSync(__dirname + "/img/avatars/" + id + ".png"));
 		}
 		// Route to client javascript
 		else if(req.url.indexOf("flipbattle_client.js") != -1) {
