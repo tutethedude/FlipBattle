@@ -6,6 +6,8 @@ var DELAY = 500;
 var CELLS = 18;
 var AVAILABLE_AVATARS = 1082;
 var AVATARS = 14;
+var EFFECT_FLIP = "swing";
+var EFFECT_MATCH = "explode"
 
 /**
 * Socket events
@@ -36,7 +38,7 @@ var tutorialTimer;
 * Document load
 **/
 $(function() {
-	tutorial();
+	//tutorial();
 	register();
 });
 
@@ -44,27 +46,25 @@ $(function() {
 * Animate tutorial widgets
 **/
 function tutorial() {
-	console.log("animating tutorial");
 	var originalGrid = $("#sample_grid").clone();
 	var originalScore = $("#sample_score").clone();
 	// Sample flip A
 	tutorialTimer = window.setTimeout(function(){
-		$("#sampleA").fadeToggle(DURATION, "swing", function (){
+		$("#sampleA").fadeToggle(DURATION, EFFECT_FLIP, function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(DURATION, "swing", function (){
+			$(this).fadeToggle(DURATION, EFFECT_FLIP, function (){
 				// Sample flip B
 				tutorialTimer = window.setTimeout(function(){
-					$("#sampleB").fadeToggle(DURATION, "swing", function (){
+					$("#sampleB").fadeToggle(DURATION, EFFECT_FLIP, function (){
 						$(this).find(".grid_item_q").toggle();
 						$(this).find(".grid_item_w").toggle();		
-						$(this).fadeToggle(DURATION, "swing", function (){
-							/*
-							$("#sampleA").find(".grid_item_w").toggle("puff", null, DURATION, function (){
-								$(this).parent().replaceWith("<div class='grid_item_blank'></div>");									
-							});	*/
-							$("#sampleB").toggle("puff", null, DURATION, function (){
-								$(this).replaceWith("<div class='grid_item_blank'></div>");									
+						$(this).fadeToggle(DURATION, EFFECT_FLIP, function (){
+							$("#sampleA").toggle(EFFECT_MATCH, null, DURATION * 2, function (){
+								$(this).replaceWith("<div class='sample_item'><img src='t.png'/></div>");									
+							});
+							$("#sampleB").toggle(EFFECT_MATCH, null, DURATION * 2, function (){
+								$(this).replaceWith("<div class='sample_item'><img src='t.png'/></div>");									
 							});	
 
 							// Sample score
@@ -72,7 +72,8 @@ function tutorial() {
 							item.insertBefore("#maxScore");
 							item.effect("highlight", {color: "darkgray"}, 500);
 							$("#targetScore > div > div.score").html("50 pts");
-							// Reset to normal							
+							// Reset to normal				
+							
 							tutorialTimer = window.setTimeout(function(){
 								$("#sample_grid").replaceWith(originalGrid);
 								$("#sample_score").replaceWith(originalScore);
@@ -180,10 +181,10 @@ function itemClick(item){
 		}
 
 		$(item).attr("data-flipped", true);
-		$(item).fadeToggle(DURATION, "swing", function (){
+		$(item).fadeToggle(DURATION, EFFECT_FLIP, function (){
 			$(this).find(".grid_item_q").toggle();
 			$(this).find(".grid_item_w").toggle();		
-			$(this).fadeToggle(DURATION, "swing", function (){
+			$(this).fadeToggle(DURATION, EFFECT_FLIP, function (){
 				if(last){
 					iosocket.emit(EVENT_STATE_UPDATE, selectedTilesCopy);
 				}
@@ -195,15 +196,15 @@ function itemClick(item){
 function updateGameGrid(tiles){
 	for(var i = 0; i < tiles.length; i++) {
 		if(tiles[i].state == TILE_FLIPPED) {
-			$("#" + tiles[i].id).toggle("puff", null, DURATION, function (){
-				$(this).replaceWith("<div class='grid_item_blank'></div>");	
+			$("#" + tiles[i].id).toggle(EFFECT_MATCH, null, DURATION * 2, function (){
+				$(this).replaceWith("<div class='grid_item'><img src='t.png'/></div>");	
 			});	
 		}
 		else if(tiles[i].state == TILE_READY) {
-			$("#" + tiles[i].id).fadeToggle(DURATION, "swing", function (){
+			$("#" + tiles[i].id).fadeToggle(DURATION, EFFECT_FLIP, function (){
 				$(this).find(".grid_item_q").toggle();
 				$(this).find(".grid_item_w").toggle();		
-				$(this).fadeToggle(DURATION, "swing", function (){
+				$(this).fadeToggle(DURATION, EFFECT_FLIP, function (){
 					$(this).attr("data-flipped", false);
 				});
 			});
