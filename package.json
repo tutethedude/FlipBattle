@@ -8,7 +8,9 @@
     "hat": "0.0.3"
   },
   "devDependencies": {},
-  "engine": "node >= 0.10.25",
+  "engines": {
+    "node" : "0.10.25"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
