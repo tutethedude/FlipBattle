@@ -217,11 +217,22 @@ function updateGameGrid(tiles){
 
 function updatePlayers(players) {
 	players.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score) } );
-	$("#players").empty();
+	$(".avatar").each(function(){
+		if(players.indexOf($(this).attr("id")) < 0) {
+			$(this).remove();
+		}
+	});
 	for(var i = 0 ; i < players.length ; i++) {
-		var name = players[i].id == playerId ? players[i].name + " (you)" : players[i].name;
-		var style = players[i].id == playerId ? "avatar avatar_selected" : "avatar";
-		$("#players").append('<div class="' + style + '"><img src="' + players[i].avatar + '.avatar" /><div class="avatar_inner"><div class="player">' + name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
+		var p = $("#" + players[i].id);
+		if (p.length ) {
+		    p.appendTo("#players");
+		    p.find(".score").html(players[i].score + " pts");
+		}
+		else {
+			var name = players[i].id == playerId ? players[i].name + " (you)" : players[i].name;
+			var style = players[i].id == playerId ? "avatar avatar_selected" : "avatar";
+			$("#players").append('<div id="' + players[i].id + '" class="' + style + '"><img src="' + players[i].avatar + '.avatar" /><div class="avatar_inner"><div class="player">' + name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
+		}
 	}
 }
 
