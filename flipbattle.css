@@ -14,6 +14,11 @@ body{
 	*/
 }
 
+input, textarea, select, button {
+	font-family:inherit;
+	font-size: 20px;
+}
+
 #header {
 	height: 50px;
 	text-align: center;
@@ -41,7 +46,7 @@ body{
 }
 
 #sample_grid {
-	min-height: 420px;
+	min-height: 440px;
 	margin: 10px 0px 10px 10px;
 	border: 2px solid darkgray;
 	-webkit-border-radius: 5px;
@@ -52,7 +57,7 @@ body{
 }
 
 #sample_score {
-	min-height: 420px;
+	min-height: 440px;
 	margin: 10px;
 	border: 2px solid darkgray;
 	-webkit-border-radius: 5px;
@@ -63,7 +68,7 @@ body{
 }
 
 #data {
-	min-height: 420px;
+	min-height: 440px;
 	margin: 10px 10px 10px 0px;
 	border: 2px solid darkgray;
 	-webkit-border-radius: 5px;
@@ -161,11 +166,23 @@ body{
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	margin-right: 10px;
+	vertical-align: bottom;
+}
+
+.avatar_inner {
+	display: inline-block;
 }
 
 .avatar .score {
 	font-weight: bold;
 	white-space: nowrap;
+}
+
+.avatar_selected {
+	border: 2px solid darkgray;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
 }
 
 .grid_item {
@@ -193,6 +210,7 @@ body{
 
 .grid_clear {
 	clear: both;
+	height: 0px;
 }
 
 #leftSidebar {
@@ -204,7 +222,8 @@ body{
 #rightSidebar {
 	float: right;
 	width: 15%;
-	text-align: center;
+	max-height: 530px;
+	overflow-y: auto;
 }
 
 #rightSidebar div p {

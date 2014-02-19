@@ -38,8 +38,8 @@ var tutorialTimer;
 * Document load
 **/
 $(function() {
-	//tutorial();
 	register();
+	tutorial();
 });
 
 /**
@@ -99,6 +99,9 @@ function register() {
 			nickname = randomName();
 		initConnection();
 	});
+	$("#sample_score").find("img").each(function(){
+		$(this).attr("src",Math.floor(Math.random() * AVAILABLE_AVATARS) + ".avatar");
+	});
 	for(var i = 0; i <= AVATARS; i++ ){
 		var avatar =  Math.floor(Math.random() * AVAILABLE_AVATARS);
 		$("#avatarSelect").append('<img src="' + avatar + '.avatar" />');
@@ -151,7 +154,7 @@ function initGameGrid(game) {
 			$("#main").append(html);
 		}
 		else if(game.tiles[i].state == TILE_FLIPPED) {
-			$("#main").append("<div class='grid_item_blank'></div>");
+			$("#main").append("<div class='grid_item'><img src='t.png'/></div>");
 		}
 	}
 	
@@ -217,7 +220,8 @@ function updatePlayers(players) {
 	$("#players").empty();
 	for(var i = 0 ; i < players.length ; i++) {
 		var name = players[i].id == playerId ? players[i].name + " (you)" : players[i].name;
-		$("#players").append('<div class="avatar"><img src="' + players[i].avatar + '.avatar" /><div><div class="player">' + name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
+		var style = players[i].id == playerId ? "avatar avatar_selected" : "avatar";
+		$("#players").append('<div class="' + style + '"><img src="' + players[i].avatar + '.avatar" /><div class="avatar_inner"><div class="player">' + name + '</div><div class="score">' + players[i].score +' pts</div></div></div>');
 	}
 }
 
