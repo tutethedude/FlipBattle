@@ -11,7 +11,7 @@ var hat = require("hat");
  * Parameters
  **/
 var AVAILABLE_TILES = 1082;
-var DISTINCT_TILES = 1;
+var DISTINCT_TILES = 2;
 var MATCH_TILES = 2;
 var SUFFIX_TILE = ".tile";
 var PORT = process.env.PORT || 8080;
