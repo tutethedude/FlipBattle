@@ -130,6 +130,7 @@ function eventStateUpdate(socket, selectedTiles) {
             initGame();
             io.sockets.emit(EVENT_STATE_INIT, gamePublicData(socket.id));
         } else {
+            console.log(tiles);
             var updateData = {
                 tiles: tiles,
                 players: game.players

@@ -144,6 +144,7 @@ function initConnection() {
 }
 
 function initGameGrid(game) {
+    selectedTiles = [];
     parameters = game.parameters;
     $("#main").empty();
     for (var i = 0; i < game.tiles.length; i++) {
