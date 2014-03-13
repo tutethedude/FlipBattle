@@ -1,104 +1,112 @@
 <!DOCTYPE html>
 <meta charset="UTF-8">
 <html>
+
 <head>
-	<title>FlipBattle</title>
+    <title>FlipBattle</title>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/flipbattle_client.js"></script>
     <!--<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.4/themes/ui-darkness/jquery-ui.css">-->
-    <link rel="stylesheet" type="text/css" href="/flipbattle.css"  />
+    <link rel="stylesheet" type="text/css" href="/flipbattle.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kaushan+Script|Racing+Sans+One">
     <link rel="icon" type="image/png" href="favicon.png">
 </head>
-<body>	
-	<div id="header">
-		<span>FlipBattle</span>
-	</div>	
-	<div id="container">
-		<div id="leftSidebar">
-			&nbsp;
-		</div>
-		<div id="rightSidebar">
-			<div id="info"></div>
-			<div id="players"></div>
-		</div>
-		<div id="main">
-			<div class="column">
-				<div id="sample_grid">
-					<h1>How to play</h1>
-					<p>Just flip the tiles to find a match and score points</p>
-					<div class="sample_item" id="sampleA">
-						<img class="grid_item_q" src="u.png"/>
-						<img class="grid_item_w" src="s.png" style="display: none;"/>
-					</div>
-					<div class="sample_item">
-						<img class="grid_item_q" src="u.png"/>
-					</div>
-					<div class="sample_item">
-						<img class="grid_item_q" src="u.png"/>
-					</div>
-					<div class="sample_item" id="sampleB">
-						<img class="grid_item_q" src="u.png"/>
-						<img class="grid_item_w" src="s.png" style="display: none;"/>
-					</div>
-					<div class="grid_clear"></div>
-				</div>
-			</div>
-			<div class="column">
-				<div id="sample_score">
-					<h1>Compete</h1>
-					<p>Challenge your friends in real time to become the ultimate flip master!</p>
-					<div class="avatar" id="maxScore">
-						<img />
-						<div class="avatar_inner">
-							<div class="player">Tyrell</div>
-							<div class="score">35 pts</div>
-						</div>
-					</div>
-					<div class="avatar">
-						<img />
-						<div class="avatar_inner">
-							<div class="player">Kelvin</div>
-							<div class="score">29 pts</div>
-						</div>
-					</div>
-					<div class="avatar" id="targetScore">
-						<img />
-						<div class="avatar_inner">
-							<div class="player">Sung</div>
-							<div class="score">24 pts</div>
-						</div>
-					</div>
-					<div class="avatar">
-						<img />
-						<div class="avatar_inner">
-							<div class="player">Alisa</div>
-							<div class="score">12 pts</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="column">
-				<div id="data">
-					<h1>Battle!</h1>
-					<p>Choose your avatar and nickname and begin the battle</p>
-					<div id="avatarSelect">
-					</div>
-					<label for="txtNickname">Nickname:</label>
-					<input type="text" name="txtNickname" id="txtNickname" />
-					<button id="btnPlay" type="button">To battle!</button>
-					<div class="grid_clear">&nbsp;</div>
-				</div>
-			</div>
-			<div class="grid_clear">&nbsp;</div>
-		</div>		
-		<div id="footer">
-			<span>Made with <a href="http://nodejs.org/">Node.js</a>, <a href="http://socket.io/">socket.io</a> and <a href="http://jquery.com/">jQuery</a>.</span>
-			<span>Full source available at <a href="https://github.com/tutethedude/FlipBattle">Github</a>.</span>
-			<span>Icons by <a href="http://game-icons.net">game-icons</a>.</span>
-		</div>		
-	</div>
+
+<body>
+    <div id="header">
+        <span>FlipBattle</span>
+    </div>
+    <div id="container">
+        <div id="leftSidebar">
+            &nbsp;
+        </div>
+        <div id="rightSidebar">
+            <div id="info"></div>
+            <div id="players"></div>
+        </div>
+        <div id="main">
+            <div class="column">
+                <div id="sample_grid">
+                    <h1>How to play</h1>
+                    <p>Just flip the tiles to find a match and score points</p>
+                    <div class="sample_item" id="sampleA">
+                        <img class="grid_item_q" src="u.png" />
+                        <img class="grid_item_w" src="s.png" style="display: none;" />
+                    </div>
+                    <div class="sample_item">
+                        <img class="grid_item_q" src="u.png" />
+                    </div>
+                    <div class="sample_item">
+                        <img class="grid_item_q" src="u.png" />
+                    </div>
+                    <div class="sample_item" id="sampleB">
+                        <img class="grid_item_q" src="u.png" />
+                        <img class="grid_item_w" src="s.png" style="display: none;" />
+                    </div>
+                    <div class="grid_clear"></div>
+                </div>
+            </div>
+            <div class="column">
+                <div id="sample_score">
+                    <h1>Compete</h1>
+                    <p>Challenge your friends in real time to become the ultimate flip master!</p>
+                    <div class="avatar" id="maxScore">
+                        <img />
+                        <div class="avatar_inner">
+                            <div class="player">Tyrell</div>
+                            <div class="score">35 pts</div>
+                        </div>
+                    </div>
+                    <div class="avatar">
+                        <img />
+                        <div class="avatar_inner">
+                            <div class="player">Kelvin</div>
+                            <div class="score">29 pts</div>
+                        </div>
+                    </div>
+                    <div class="avatar" id="targetScore">
+                        <img />
+                        <div class="avatar_inner">
+                            <div class="player">Sung</div>
+                            <div class="score">24 pts</div>
+                        </div>
+                    </div>
+                    <div class="avatar">
+                        <img />
+                        <div class="avatar_inner">
+                            <div class="player">Alisa</div>
+                            <div class="score">12 pts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div id="data">
+                    <h1>Battle!</h1>
+                    <p>Choose your avatar and nickname and begin the battle</p>
+                    <div id="avatarSelect">
+                    </div>
+                    <label for="txtNickname">Nickname:</label>
+                    <input type="text" name="txtNickname" id="txtNickname" />
+                    <button id="btnPlay" type="button">To battle!</button>
+                    <div class="grid_clear">&nbsp;</div>
+                </div>
+            </div>
+            <div class="grid_clear">&nbsp;</div>
+        </div>
+        <div id="footer">
+            <span>Made with
+                <a href="http://nodejs.org/">Node.js</a>,
+                <a href="http://socket.io/">socket.io</a>and
+                <a href="http://jquery.com/">jQuery</a>.</span>
+            <span>Full source available at
+                <a href="https://github.com/tutethedude/FlipBattle">Github</a>.</span>
+            <span>Icons by
+                <a href="http://game-icons.net">game-icons</a>.</span>
+        </div>
+    </div>
 </body>
+
 </html>
