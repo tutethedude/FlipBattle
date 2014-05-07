@@ -14,8 +14,8 @@ var AVAILABLE_TILES = 1082;
 var DISTINCT_TILES = 14;
 var MATCH_TILES = 2;
 var SUFFIX_TILE = ".tile";
-var PORT = process.env.PORT || 8080;
-var USE_SSL = process.env.PORT ? true : false;
+var PORT = process.env.PORT || process.env.PORT == 8080 || 8080;
+var USE_SSL = PORT != 8080 ? true : false;
 
 /**
  * Socket events
@@ -288,12 +288,19 @@ function processRoute(req, res) {
             });
             res.end(fs.readFileSync(__dirname + "/flipbattle.css"));
         }
+        // Old
+        else if (req.url.indexOf("old") != -1) {
+            res.writeHead(200, {
+                "Content-type": "text/html"
+            });
+            res.end(fs.readFileSync(__dirname + "/flipbattle.html"));
+        }
         // Everything else defaults to html page
         else {
             res.writeHead(200, {
                 "Content-type": "text/html"
             });
-            res.end(fs.readFileSync(__dirname + "/flipbattle.html"));
+            res.end(fs.readFileSync(__dirname + "/flipbattlenew.html"));
         }
     }
 }
